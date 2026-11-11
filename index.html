@@ -1,461 +1,353 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PLAYVERSE - Gaming Arcade</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robbie’s Games</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:radial-gradient(ellipse at bottom,#1b2040 0%,#090a14 70%);
+  color:#e8ecff;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: white;
-  background: #090d1c;
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.planet{
+  position:fixed;
+  border-radius:50%;
+  z-index:0;
+  opacity:.55;
+  filter:blur(1px);
+  animation:float 14s ease-in-out infinite
 }
 
-header {
-  padding: 25px;
-  text-align: center;
-  background: linear-gradient(120deg,#171c4d,#551c65);
+.p1{
+  width:180px;height:180px;top:8%;right:6%;
+  background:radial-gradient(circle at 30% 30%,#ffb36b,#c0451f 60%,#5a1a0c)
 }
 
-.logo {
-  font-size: 35px;
-  font-weight: bold;
-  color: #55eeee;
+.p2{
+  width:110px;height:110px;bottom:10%;left:4%;
+  background:radial-gradient(circle at 30% 30%,#8ee3ff,#2a6fd6 60%,#0d2457);
+  animation-delay:-5s
 }
 
-.hero {
-  padding: 55px 20px;
-  text-align: center;
-  background: linear-gradient(120deg,#202b55,#54245e);
+@keyframes float{50%{transform:translateY(-25px)}}
+
+header{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  padding:50px 16px 20px
 }
 
-.hero h1 {
-  font-size: 48px;
-  margin: 10px;
+h1{
+  font-size:clamp(2.2rem,6vw,4rem);
+  letter-spacing:4px;
+  background:linear-gradient(90deg,#7df9ff,#b388ff,#ff7de9);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent
 }
 
-.hero p {
-  color: #ddd;
-  font-size: 18px;
+header p{margin-top:8px;color:#9aa5d8}
+
+.search{
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:center;
+  margin:20px 16px
 }
 
-.stats {
-  color: #ffe27a;
-  font-weight: bold;
-  font-size: 20px;
+.search input{
+  width:min(520px,100%);
+  padding:14px 22px;
+  border-radius:50px;
+  border:1px solid #5b6bd6;
+  background:rgba(15,18,45,.8);
+  color:#fff;
+  font-size:1rem;
+  outline:none
 }
 
-main {
-  max-width: 1200px;
-  margin: auto;
-  padding: 25px;
+#count{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  color:#7df9ff;
+  margin-bottom:10px
 }
 
-.toolbar {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
+#grid{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:18px;
+  max-width:1100px;
+  margin:0 auto;
+  padding:15px 20px 60px
 }
 
-input, select {
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #444;
-  background: #171e36;
-  color: white;
-  font-size: 16px;
+.card{
+  display:block;
+  width:100%;
+  font:inherit;
+  cursor:pointer;
+  text-decoration:none;
+  color:#e8ecff;
+  padding:14px 12px 20px;
+  text-align:center;
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(40,46,100,.75),rgba(15,18,45,.85));
+  border:1px solid rgba(125,140,255,.3);
+  transition:.25s;
+  font-weight:bold
 }
 
-input {
-  flex: 1;
-  min-width: 200px;
+.card:hover{
+  transform:translateY(-6px) scale(1.04);
+  border-color:#7df9ff;
+  box-shadow:0 0 22px rgba(125,249,255,.55)
 }
 
-h2 {
-  margin-top: 35px;
+.card img{
+  display:block;
+  width:100%;
+  height:135px;
+  object-fit:contain;
+  border-radius:10px;
+  margin-bottom:12px
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(210px,1fr));
-  gap: 15px;
+.card span{
+  display:block;
+  font-size:2.5rem;
+  margin-bottom:12px
 }
 
-.game {
-  background: linear-gradient(145deg,#202b50,#141a30);
-  border: 1px solid #384568;
-  border-radius: 15px;
-  padding: 18px;
-  transition: .2s;
-}
-
-.game:hover {
-  transform: translateY(-5px);
-  border-color: #55eeee;
-}
-
-.emoji {
-  font-size: 35px;
-}
-
-.game h3 {
-  margin-bottom: 8px;
-}
-
-.tag {
-  color: #55eeee;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.game p {
-  color: #bbc5df;
-  font-size: 13px;
-  min-height: 35px;
-}
-
-.play {
-  display: block;
-  text-align: center;
-  padding: 10px;
-  background: linear-gradient(90deg,#55eeee,#9292ff);
-  color: #080d20;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 8px;
-}
-
-.play:hover {
-  filter: brightness(1.2);
-}
-
-.banner {
-  background: linear-gradient(100deg,#153d50,#26305e);
-  padding: 25px;
-  border-radius: 15px;
-  margin-top: 40px;
-}
-
-footer {
-  text-align: center;
-  padding: 30px;
-  color: #aaa;
-}
-
-@media(max-width:600px) {
-  .hero h1 {
-    font-size: 35px;
-  }
+.card small{
+  display:block;
+  font-weight:normal;
+  font-size:.8rem;
+  color:#8f9bd8;
+  margin-top:8px
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="stars"></canvas>
+<div class="planet p1"></div>
+<div class="planet p2"></div>
+
 <header>
-  <div class="logo">🎮 PLAYVERSE</div>
-  <p>Your next favourite game starts here!</p>
+  <h1>🚀 ROBBIE’S GAMES</h1>
+  <p>Pick a game. Start playing.</p>
 </header>
 
-<section class="hero">
-  <h1>ENTER THE GAMEVERSE 🚀</h1>
-  <p>Discover hundreds of awesome games!</p>
-  <div class="stats">
-    324 GAMES | 20 FLIGHT SIMULATORS
-  </div>
-</section>
-
-<main>
-
-<div class="toolbar">
-  <input id="search" placeholder="🔎 Search for games...">
-
-  <select id="category">
-    <option value="All">All Genres</option>
-    <option>Arcade</option>
-    <option>Puzzle</option>
-    <option>Racing</option>
-    <option>Adventure</option>
-    <option>Strategy</option>
-    <option>Sports</option>
-    <option>Simulation</option>
-    <option>Co-op & Party</option>
-    <option>Flight Simulator</option>
-  </select>
-
-  <select id="sort">
-    <option value="featured">Featured</option>
-    <option value="az">A-Z</option>
-  </select>
+<div class="search">
+  <input id="q" type="text" placeholder="Search my games...">
 </div>
 
-<h2>🕹️ GAME ARCADE</h2>
-<p id="count">Loading games...</p>
-<div class="grid" id="games"></div>
-
-<div class="banner">
-  <h2>✈️ WELCOME TO THE FLIGHT HANGAR</h2>
-  <p>Take control of aircraft and explore the skies!</p>
-</div>
-
-<h2>✈️ FLIGHT SIMULATORS</h2>
-<div class="grid" id="flights"></div>
-
-</main>
-
-<footer>
-  PLAYVERSE © 2026 | GAME ON! 🎮
-</footer>
+<div id="count"></div>
+<div id="grid"></div>
 
 <script>
 
-// GAME CATEGORIES
+const games=[
 
-const categories = {
-  "Arcade": [
-    "Neon Dash","Pixel Panic","Rocket Rumble",
-    "Laser Loop","Turbo Bounce","Bubble Blitz",
-    "Cosmic Runner","Jelly Jump","Astro Dodge",
-    "Mega Marble"
-  ],
+{
+  n:"Paper.io",
+  e:"📄",
+  u:"https://advanced95.github.io/page/g/paperio2/",
+  img:"IMG_9373.png"
+},
 
-  "Puzzle": [
-    "Mystery Tiles","Brainbox Quest","Prism Path",
-    "Number Nest","Circuit Solver","Mirror Maze",
-    "Crystal Logic","Word Wizard","Block Breaker",
-    "Pattern Planet"
-  ],
+{
+  n:"Minecraft",
+  e:"⛏️",
+  u:"https://advanced95.github.io/page/g/mc/",
+  img:"https://www.google.com/s2/favicons?domain=minecraft.net&sz=128"
+},
 
-  "Racing": [
-    "Turbo Track","Drift District","Rocket Rally",
-    "Street Sprint","Kart Chaos","Mountain Racer",
-    "Neon Speedway","Desert Dash","Skyline GP",
-    "Velocity Valley"
-  ],
+{
+  n:"Adventure Capitalist",
+  e:"💰",
+  u:"https://advanced95.github.io/page/g/adventurecapitalist/",
+  img:"IMG_9372.jpeg"
+},
 
-  "Adventure": [
-    "Lost Kingdom","Jungle Journey","Moonbase Mystery",
-    "Dragon Trail","Treasure Tides","Clockwork Island",
-    "Cavern Quest","Starship Explorer","Mystic Woods",
-    "Cloud Kingdom"
-  ],
+{
+  n:"Subway Surfers",
+  e:"🏃",
+  u:"https://advanced95.github.io/page/g/subway-surfers/",
+  img:"IMG_9374.png"
+},
 
-  "Strategy": [
-    "Tiny Kingdoms","Tower Tactician","Space Colony",
-    "Castle Commander","Garden Guardians","Robot Uprising",
-    "Island Empire","Dungeon Draft","Battle Grid",
-    "Planet Builder"
-  ],
+{
+  n:"Cookie Clicker",
+  e:"🍪",
+  u:"https://advanced95.github.io/page/g/cookieclicker/",
+  img:"IMG_9375.png"
+},
 
-  "Sports": [
-    "Street Hoops","Mini Golf Masters","Penalty Hero",
-    "Snowboard Rush","Tennis Clash","Skate Park Pro",
-    "Soccer Stars","Pool Party","Dunk Legends",
-    "BMX Blitz"
-  ],
+{
+  n:"Geometry Dash",
+  e:"🟩",
+  u:"https://advanced95.github.io/page/g/geodash/",
+  img:"https://www.google.com/s2/favicons?domain=robtopgames.com&sz=128"
+},
 
-  "Simulation": [
-    "Cozy Farm","City Builder","Pet Hotel",
-    "Cafe Crafter","Theme Park Tycoon","Aquarium Life",
-    "Train Manager","Power Plant","Fishing Days",
-    "Workshop World"
-  ],
+{
+  n:"Hole.io",
+  e:"🕳️",
+  u:"https://advanced95.github.io/page/g/holeio/",
+  img:"IMG_9376.jpeg"
+},
 
-  "Co-op & Party": [
-    "Doodle Duel","Team Trouble","Party Panic",
-    "Friendship Quest","Color Clash","Hideout Heroes",
-    "Wacky Wizards","Mini Mayhem","Bounce Buddies",
-    "Button Bash"
-  ]
-};
+{
+  n:"FNAF 1",
+  e:"🐻",
+  u:"https://advanced95.github.io/page/g/fnaf/",
+  img:"https://www.google.com/s2/favicons?domain=scottgames.com&sz=128"
+},
 
-// 304 REGULAR GAME LISTINGS
+{
+  n:"FNAF 2",
+  e:"🐰",
+  u:"https://advanced95.github.io/page/g/fnaf-2/",
+  img:"https://www.google.com/s2/favicons?domain=scottgames.com&sz=128"
+},
 
-const suffixes = [
-  "Remix","Reloaded","Ultra","Quest"
+{
+  n:"Block Blast",
+  e:"🧩",
+  u:"https://advanced95.github.io/page/g/blockblast/",
+  img:"https://www.google.com/s2/favicons?domain=blockblast.com&sz=128"
+}
+
 ];
 
-let regularGames = [];
+/* DISPLAY GAMES */
 
-for (const [category, names] of Object.entries(categories)) {
-  for (let i = 0; i < 38; i++) {
-    let title = names[i % names.length];
+const grid=document.getElementById("grid");
+const count=document.getElementById("count");
+const q=document.getElementById("q");
 
-    if (i >= 10) {
-      title += " " + suffixes[Math.floor(i / 10) - 1];
-    }
+function render(){
 
-    if (i >= 10) {
-      title += " " + (i + 1);
-    }
+  const term=q.value.toLowerCase();
 
-    regularGames.push({
-      title: title,
-      category: category,
-      flight: false
-    });
-  }
-}
+  const list=games.filter(g=>
+    g.n.toLowerCase().includes(term)
+  );
 
-// 20 FLIGHT SIMULATORS
+  grid.innerHTML="";
 
-const flightGames = [
-  "GeoFS",
-  "FlightGear",
-  "YSFlight",
-  "SimplePlanes",
-  "Tiny Combat Arena",
-  "DCS World",
-  "Microsoft Flight Simulator",
-  "X-Plane",
-  "Aerofly FS",
-  "Infinite Flight",
-  "Rise of Flight",
-  "IL-2 Sturmovik",
-  "War Thunder Air Battles",
-  "Flight Simulator Cessna",
-  "Bush Pilot Challenge",
-  "Rescue Helicopter Pilot",
-  "Sky Cargo Pilot",
-  "Airliner Captain",
-  "Jet Fighter Training",
-  "Glider Adventure"
-].map(title => ({
-  title: title,
-  category: "Flight Simulator",
-  flight: true
-}));
+  list.forEach(g=>{
 
-// COMBINE ALL GAMES
+    const a=document.createElement("a");
 
-const allGames = [...regularGames, ...flightGames];
+    a.className="card";
+    a.href=g.u;
+    a.target="_blank";
+    a.rel="noopener noreferrer";
 
-const icons = {
-  "Arcade":"🕹️",
-  "Puzzle":"🧩",
-  "Racing":"🏎️",
-  "Adventure":"🗺️",
-  "Strategy":"♟️",
-  "Sports":"🏆",
-  "Simulation":"🌱",
-  "Co-op & Party":"🎉",
-  "Flight Simulator":"✈️"
-};
+    const img=document.createElement("img");
 
-// CREATE GAME CARDS
+    img.src=g.img;
+    img.alt=g.n;
+    img.loading="lazy";
 
-function createCard(game) {
+    const fallback=document.createElement("span");
+    fallback.textContent=g.e;
+    fallback.style.display="none";
 
-  const url =
-    "https://itch.io/search?q=" +
-    encodeURIComponent(game.title);
+    img.onerror=()=>{
+      img.style.display="none";
+      fallback.style.display="block";
+    };
 
-  return `
-    <div class="game">
-      <div class="emoji">
-        ${icons[game.category]}
-      </div>
+    a.appendChild(img);
+    a.appendChild(fallback);
+    a.appendChild(document.createTextNode(g.n));
 
-      <div class="tag">
-        ${game.category}
-      </div>
+    const small=document.createElement("small");
+    small.textContent="Play now";
 
-      <h3>${game.title}</h3>
+    a.appendChild(small);
+    grid.appendChild(a);
 
-      <p>
-        Discover ${game.title} and find a version to play!
-      </p>
-
-      <a class="play"
-         href="${url}"
-         target="_blank"
-         rel="noopener noreferrer">
-         FIND & PLAY ↗
-      </a>
-    </div>
-  `;
-}
-
-// SEARCH AND FILTER
-
-function renderGames() {
-
-  const search =
-    document.getElementById("search")
-      .value.toLowerCase();
-
-  const category =
-    document.getElementById("category").value;
-
-  const sort =
-    document.getElementById("sort").value;
-
-  let filtered = allGames.filter(game => {
-
-    const matchesSearch =
-      game.title.toLowerCase().includes(search);
-
-    const matchesCategory =
-      category === "All" ||
-      game.category === category;
-
-    return matchesSearch && matchesCategory;
   });
 
-  if (sort === "az") {
-    filtered.sort((a,b) =>
-      a.title.localeCompare(b.title)
-    );
-  }
+  count.textContent=list.length+" games available";
 
-  const normalGames =
-    filtered.filter(game => !game.flight);
-
-  const flightResults =
-    filtered.filter(game => game.flight);
-
-  document.getElementById("games").innerHTML =
-    normalGames.length
-      ? normalGames.map(createCard).join("")
-      : "<p>No games found!</p>";
-
-  document.getElementById("flights").innerHTML =
-    flightResults.length
-      ? flightResults.map(createCard).join("")
-      : "<p>No flight simulators found!</p>";
-
-  document.getElementById("count").textContent =
-    "Showing " + filtered.length +
-    " of " + allGames.length + " games";
-
-  document.querySelector(".banner").style.display =
-    category === "Flight Simulator" ? "none" : "block";
 }
 
-// EVENT LISTENERS
+q.addEventListener("input",render);
+render();
 
-document.getElementById("search")
-  .addEventListener("input",renderGames);
+/* STARFIELD */
 
-document.getElementById("category")
-  .addEventListener("change",renderGames);
+const sc=document.getElementById("stars");
+const sx=sc.getContext("2d");
 
-document.getElementById("sort")
-  .addEventListener("change",renderGames);
+let st=[];
 
-// START WEBSITE
+function size(){
 
-renderGames();m my
+  sc.width=innerWidth;
+  sc.height=innerHeight;
+
+  st=Array.from({length:220},()=>({
+    x:Math.random()*sc.width,
+    y:Math.random()*sc.height,
+    r:Math.random()*1.6+.3,
+    s:Math.random()*.4+.05,
+    t:Math.random()*6
+  }));
+
+}
+
+function draw(){
+
+  sx.clearRect(0,0,sc.width,sc.height);
+
+  st.forEach(s=>{
+
+    s.t+=.03;
+    s.y+=s.s;
+
+    if(s.y>sc.height){
+      s.y=0;
+      s.x=Math.random()*sc.width;
+    }
+
+    sx.globalAlpha=.5+.5*Math.sin(s.t);
+    sx.fillStyle="#fff";
+    sx.beginPath();
+    sx.arc(s.x,s.y,s.r,0,6.3);
+    sx.fill();
+
+  });
+
+  requestAnimationFrame(draw);
+
+}
+
+addEventListener("resize",size);
+size();
+draw();
 
 </script>
-
 </body>
 </html>
