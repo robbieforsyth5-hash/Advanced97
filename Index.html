@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLAYVERSE - Gaming Arcade</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: #090d1c;
+}
+
+header {
+  padding: 25px;
+  text-align: center;
+  background: linear-gradient(120deg,#171c4d,#551c65);
+}
+
+.logo {
+  font-size: 35px;
+  font-weight: bold;
+  color: #55eeee;
+}
+
+.hero {
+  padding: 55px 20px;
+  text-align: center;
+  background: linear-gradient(120deg,#202b55,#54245e);
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin: 10px;
+}
+
+.hero p {
+  color: #ddd;
+  font-size: 18px;
+}
+
+.stats {
+  color: #ffe27a;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+main {
+  max-width: 1200px;
+  margin: auto;
+  padding: 25px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+input, select {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background: #171e36;
+  color: white;
+  font-size: 16px;
+}
+
+input {
+  flex: 1;
+  min-width: 200px;
+}
+
+h2 {
+  margin-top: 35px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(210px,1fr));
+  gap: 15px;
+}
+
+.game {
+  background: linear-gradient(145deg,#202b50,#141a30);
+  border: 1px solid #384568;
+  border-radius: 15px;
+  padding: 18px;
+  transition: .2s;
+}
+
+.game:hover {
+  transform: translateY(-5px);
+  border-color: #55eeee;
+}
+
+.emoji {
+  font-size: 35px;
+}
+
+.game h3 {
+  margin-bottom: 8px;
+}
+
+.tag {
+  color: #55eeee;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.game p {
+  color: #bbc5df;
+  font-size: 13px;
+  min-height: 35px;
+}
+
+.play {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  background: linear-gradient(90deg,#55eeee,#9292ff);
+  color: #080d20;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.play:hover {
+  filter: brightness(1.2);
+}
+
+.banner {
+  background: linear-gradient(100deg,#153d50,#26305e);
+  padding: 25px;
+  border-radius: 15px;
+  margin-top: 40px;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #aaa;
+}
+
+@media(max-width:600px) {
+  .hero h1 {
+    font-size: 35px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🎮 PLAYVERSE</div>
+  <p>Your next favourite game starts here!</p>
+</header>
+
+<section class="hero">
+  <h1>ENTER THE GAMEVERSE 🚀</h1>
+  <p>Discover hundreds of awesome games!</p>
+  <div class="stats">
+    324 GAMES | 20 FLIGHT SIMULATORS
+  </div>
+</section>
+
+<main>
+
+<div class="toolbar">
+  <input id="search" placeholder="🔎 Search for games...">
+
+  <select id="category">
+    <option value="All">All Genres</option>
+    <option>Arcade</option>
+    <option>Puzzle</option>
+    <option>Racing</option>
+    <option>Adventure</option>
+    <option>Strategy</option>
+    <option>Sports</option>
+    <option>Simulation</option>
+    <option>Co-op & Party</option>
+    <option>Flight Simulator</option>
+  </select>
+
+  <select id="sort">
+    <option value="featured">Featured</option>
+    <option value="az">A-Z</option>
+  </select>
+</div>
+
+<h2>🕹️ GAME ARCADE</h2>
+<p id="count">Loading games...</p>
+<div class="grid" id="games"></div>
+
+<div class="banner">
+  <h2>✈️ WELCOME TO THE FLIGHT HANGAR</h2>
+  <p>Take control of aircraft and explore the skies!</p>
+</div>
+
+<h2>✈️ FLIGHT SIMULATORS</h2>
+<div class="grid" id="flights"></div>
+
+</main>
+
+<footer>
+  PLAYVERSE © 2026 | GAME ON! 🎮
+</footer>
+
+<script>
+
+// GAME CATEGORIES
+
+const categories = {
+  "Arcade": [
+    "Neon Dash","Pixel Panic","Rocket Rumble",
+    "Laser Loop","Turbo Bounce","Bubble Blitz",
+    "Cosmic Runner","Jelly Jump","Astro Dodge",
+    "Mega Marble"
+  ],
+
+  "Puzzle": [
+    "Mystery Tiles","Brainbox Quest","Prism Path",
+    "Number Nest","Circuit Solver","Mirror Maze",
+    "Crystal Logic","Word Wizard","Block Breaker",
+    "Pattern Planet"
+  ],
+
+  "Racing": [
+    "Turbo Track","Drift District","Rocket Rally",
+    "Street Sprint","Kart Chaos","Mountain Racer",
+    "Neon Speedway","Desert Dash","Skyline GP",
+    "Velocity Valley"
+  ],
+
+  "Adventure": [
+    "Lost Kingdom","Jungle Journey","Moonbase Mystery",
+    "Dragon Trail","Treasure Tides","Clockwork Island",
+    "Cavern Quest","Starship Explorer","Mystic Woods",
+    "Cloud Kingdom"
+  ],
+
+  "Strategy": [
+    "Tiny Kingdoms","Tower Tactician","Space Colony",
+    "Castle Commander","Garden Guardians","Robot Uprising",
+    "Island Empire","Dungeon Draft","Battle Grid",
+    "Planet Builder"
+  ],
+
+  "Sports": [
+    "Street Hoops","Mini Golf Masters","Penalty Hero",
+    "Snowboard Rush","Tennis Clash","Skate Park Pro",
+    "Soccer Stars","Pool Party","Dunk Legends",
+    "BMX Blitz"
+  ],
+
+  "Simulation": [
+    "Cozy Farm","City Builder","Pet Hotel",
+    "Cafe Crafter","Theme Park Tycoon","Aquarium Life",
+    "Train Manager","Power Plant","Fishing Days",
+    "Workshop World"
+  ],
+
+  "Co-op & Party": [
+    "Doodle Duel","Team Trouble","Party Panic",
+    "Friendship Quest","Color Clash","Hideout Heroes",
+    "Wacky Wizards","Mini Mayhem","Bounce Buddies",
+    "Button Bash"
+  ]
+};
+
+// 304 REGULAR GAME LISTINGS
+
+const suffixes = [
+  "Remix","Reloaded","Ultra","Quest"
+];
+
+let regularGames = [];
+
+for (const [category, names] of Object.entries(categories)) {
+  for (let i = 0; i < 38; i++) {
+    let title = names[i % names.length];
+
+    if (i >= 10) {
+      title += " " + suffixes[Math.floor(i / 10) - 1];
+    }
+
+    if (i >= 10) {
+      title += " " + (i + 1);
+    }
+
+    regularGames.push({
+      title: title,
+      category: category,
+      flight: false
+    });
+  }
+}
+
+// 20 FLIGHT SIMULATORS
+
+const flightGames = [
+  "GeoFS",
+  "FlightGear",
+  "YSFlight",
+  "SimplePlanes",
+  "Tiny Combat Arena",
+  "DCS World",
+  "Microsoft Flight Simulator",
+  "X-Plane",
+  "Aerofly FS",
+  "Infinite Flight",
+  "Rise of Flight",
+  "IL-2 Sturmovik",
+  "War Thunder Air Battles",
+  "Flight Simulator Cessna",
+  "Bush Pilot Challenge",
+  "Rescue Helicopter Pilot",
+  "Sky Cargo Pilot",
+  "Airliner Captain",
+  "Jet Fighter Training",
+  "Glider Adventure"
+].map(title => ({
+  title: title,
+  category: "Flight Simulator",
+  flight: true
+}));
+
+// COMBINE ALL GAMES
+
+const allGames = [...regularGames, ...flightGames];
+
+const icons = {
+  "Arcade":"🕹️",
+  "Puzzle":"🧩",
+  "Racing":"🏎️",
+  "Adventure":"🗺️",
+  "Strategy":"♟️",
+  "Sports":"🏆",
+  "Simulation":"🌱",
+  "Co-op & Party":"🎉",
+  "Flight Simulator":"✈️"
+};
+
+// CREATE GAME CARDS
+
+function createCard(game) {
+
+  const url =
+    "https://itch.io/search?q=" +
+    encodeURIComponent(game.title);
+
+  return `
+    <div class="game">
+      <div class="emoji">
+        ${icons[game.category]}
+      </div>
+
+      <div class="tag">
+        ${game.category}
+      </div>
+
+      <h3>${game.title}</h3>
+
+      <p>
+        Discover ${game.title} and find a version to play!
+      </p>
+
+      <a class="play"
+         href="${url}"
+         target="_blank"
+         rel="noopener noreferrer">
+         FIND & PLAY ↗
+      </a>
+    </div>
+  `;
+}
+
+// SEARCH AND FILTER
+
+function renderGames() {
+
+  const search =
+    document.getElementById("search")
+      .value.toLowerCase();
+
+  const category =
+    document.getElementById("category").value;
+
+  const sort =
+    document.getElementById("sort").value;
+
+  let filtered = allGames.filter(game => {
+
+    const matchesSearch =
+      game.title.toLowerCase().includes(search);
+
+    const matchesCategory =
+      category === "All" ||
+      game.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  if (sort === "az") {
+    filtered.sort((a,b) =>
+      a.title.localeCompare(b.title)
+    );
+  }
+
+  const normalGames =
+    filtered.filter(game => !game.flight);
+
+  const flightResults =
+    filtered.filter(game => game.flight);
+
+  document.getElementById("games").innerHTML =
+    normalGames.length
+      ? normalGames.map(createCard).join("")
+      : "<p>No games found!</p>";
+
+  document.getElementById("flights").innerHTML =
+    flightResults.length
+      ? flightResults.map(createCard).join("")
+      : "<p>No flight simulators found!</p>";
+
+  document.getElementById("count").textContent =
+    "Showing " + filtered.length +
+    " of " + allGames.length + " games";
+
+  document.querySelector(".banner").style.display =
+    category === "Flight Simulator" ? "none" : "block";
+}
+
+// EVENT LISTENERS
+
+document.getElementById("search")
+  .addEventListener("input",renderGames);
+
+document.getElementById("category")
+  .addEventListener("change",renderGames);
+
+document.getElementById("sort")
+  .addEventListener("change",renderGames);
+
+// START WEBSITE
+
+renderGames();m my
+
+</script>
+
+</body>
+</html>
