@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,165 +6,530 @@
 <title>Robbie’s Games</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+:root{--cyan:#7df9ff;--purple:#9b8cff;--panel:rgba(19,24,59,.94);--muted:#9aa5d8}
 body{background:radial-gradient(ellipse at bottom,#1b2040 0%,#090a14 70%);color:#e8ecff;font-family:"Trebuchet MS",Arial,sans-serif;min-height:100vh;overflow-x:hidden}
 #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
-.planet{position:fixed;border-radius:50%;z-index:0;opacity:.55;filter:blur(1px);animation:float 14s ease-in-out infinite}
+.planet{position:fixed;border-radius:50%;z-index:0;opacity:.45;filter:blur(1px);animation:float 14s ease-in-out infinite;pointer-events:none}
 .p1{width:180px;height:180px;top:8%;right:6%;background:radial-gradient(circle at 30% 30%,#ffb36b,#c0451f 60%,#5a1a0c)}
 .p2{width:110px;height:110px;bottom:10%;left:4%;background:radial-gradient(circle at 30% 30%,#8ee3ff,#2a6fd6 60%,#0d2457);animation-delay:-5s}
 @keyframes float{50%{transform:translateY(-25px)}}
-header{position:relative;z-index:1;text-align:center;padding:50px 16px 20px}
+header{position:relative;z-index:1;text-align:center;padding:55px 16px 20px}
 h1{font-size:clamp(2.2rem,6vw,4rem);letter-spacing:4px;background:linear-gradient(90deg,#7df9ff,#b388ff,#ff7de9);-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{margin-top:8px;color:#9aa5d8}
-.search{position:relative;z-index:1;display:flex;justify-content:center;margin:20px 16px}
-.search input{width:min(520px,100%);padding:14px 22px;border-radius:50px;border:1px solid #5b6bd6;background:rgba(15,18,45,.8);color:#fff;font-size:1rem;outline:none}
-#count{position:relative;z-index:1;text-align:center;color:#7df9ff;margin-bottom:10px}
+header p{margin-top:8px;color:var(--muted)}
+#announcement{display:none;position:relative;z-index:1;max-width:900px;margin:10px auto;padding:12px 18px;text-align:center;border:1px solid #756aff;border-radius:12px;background:#28245c;color:#fff}
+.search{position:relative;z-index:1;display:flex;justify-content:center;margin:20px 16px 12px}
+.search input{width:min(520px,100%);padding:14px 22px;border-radius:50px;border:1px solid #5b6bd6;background:rgba(15,18,45,.88);color:#fff;font-size:1rem;outline:none}
+#categoryBar{position:relative;z-index:1;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:0 15px 12px}
+.chip{border:1px solid #555fa7;background:#171d43;color:#cbd4ff;border-radius:30px;padding:8px 13px;cursor:pointer}
+.chip.active,.chip:hover{background:#5866df;color:white;border-color:#8b99ff}
+#count{position:relative;z-index:1;text-align:center;color:var(--cyan);margin:4px 0 10px}
 #grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px;max-width:1100px;margin:0 auto;padding:15px 20px 60px}
-.card{display:block;width:100%;font:inherit;cursor:pointer;text-decoration:none;color:#e8ecff;padding:14px 12px 20px;text-align:center;border-radius:16px;background:linear-gradient(145deg,rgba(40,46,100,.75),rgba(15,18,45,.85));border:1px solid rgba(125,140,255,.3);transition:.25s;font-weight:bold}
-.card:hover{transform:translateY(-6px) scale(1.04);border-color:#7df9ff;box-shadow:0 0 22px rgba(125,249,255,.55)}
+.card{position:relative;display:block;width:100%;font:inherit;cursor:pointer;text-decoration:none;color:#e8ecff;padding:14px 12px 20px;text-align:center;border-radius:16px;background:linear-gradient(145deg,rgba(40,46,100,.8),rgba(15,18,45,.9));border:1px solid rgba(125,140,255,.3);transition:.25s;font-weight:bold}
+.card:hover{transform:translateY(-6px) scale(1.035);border-color:var(--cyan);box-shadow:0 0 22px rgba(125,249,255,.4)}
 .card img{display:block;width:100%;height:135px;object-fit:contain;border-radius:10px;margin-bottom:12px}
-.card span{display:block;font-size:2.5rem;margin-bottom:12px}
-.card small{display:block;font-weight:normal;font-size:.8rem;color:#8f9bd8;margin-top:8px}
-#adminOpen{position:fixed;right:14px;top:14px;z-index:5;border:1px solid #6877df;background:#111633;color:#dce4ff;border-radius:10px;padding:9px 13px;cursor:pointer;font-weight:bold}
-#adminOverlay{display:none;position:fixed;inset:0;z-index:10;background:rgba(3,5,18,.88);padding:18px;overflow:auto}
-#adminBox{width:min(680px,100%);margin:35px auto;background:#151a38;border:1px solid #6877df;border-radius:18px;padding:22px;box-shadow:0 0 35px #5969ff55}
-#adminBox h2{color:#7df9ff;margin-bottom:8px}
+.card .emoji{display:block;font-size:3rem;height:135px;line-height:135px;margin-bottom:12px}
+.card small{display:block;font-weight:normal;font-size:.8rem;color:#aab5f0;margin-top:8px}
+.card .tag{position:absolute;top:9px;left:9px;background:#6456d9;color:white;border-radius:20px;padding:4px 8px;font-size:.68rem}
+.card .featured{position:absolute;top:9px;right:9px;background:#e49c35;color:#20152b;border-radius:20px;padding:4px 8px;font-size:.68rem}
+#adminOpen{position:fixed;right:14px;top:14px;z-index:5;border:1px solid #6877df;background:#111633;color:#dce4ff;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:bold}
+#adminOverlay{display:none;position:fixed;inset:0;z-index:10;background:rgba(3,5,18,.9);padding:14px;overflow:auto}
+#adminBox{width:min(900px,100%);margin:25px auto;background:#151a38;border:1px solid #6877df;border-radius:18px;padding:22px;box-shadow:0 0 35px #5969ff55}
+#adminBox h2{color:var(--cyan);margin-bottom:8px}
 #adminBox p{color:#aab4e4;margin:8px 0 15px}
-.adminField{display:grid;gap:6px;margin:12px 0}
+.adminField{display:grid;gap:6px;margin:11px 0}
 .adminField label{color:#cbd4ff;font-size:.9rem}
-.adminField input{width:100%;padding:11px 12px;border-radius:9px;border:1px solid #49558f;background:#090e25;color:white;font:inherit}
+.adminField input,.adminField select,.adminField textarea{width:100%;padding:11px 12px;border-radius:9px;border:1px solid #49558f;background:#090e25;color:white;font:inherit}
+.adminField textarea{min-height:75px;resize:vertical}
 .adminActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
 .adminBtn{border:0;border-radius:9px;padding:10px 14px;background:#6575ff;color:white;font-weight:bold;cursor:pointer}
-.adminBtn.secondary{background:#30395f}
-.adminBtn.danger{background:#a93c64}
-#adminStatus{min-height:22px;color:#7df9ff;margin-top:10px}
-#adminList{margin-top:20px;border-top:1px solid #343e70;padding-top:12px}
-.adminGame{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #30385f}
+.adminBtn.secondary{background:#30395f}.adminBtn.danger{background:#a93c64}.adminBtn:hover{filter:brightness(1.15)}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}
+.tab{border:1px solid #4a568f;background:#20284f;color:#dce4ff;border-radius:9px;padding:9px 13px;cursor:pointer}
+.tab.active{background:#6575ff;border-color:#8994ff}
+.panel{display:none;border:1px solid #343e70;border-radius:13px;padding:16px;margin-top:10px;background:#111735}
+.panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.stat{background:#202750;border:1px solid #414d87;border-radius:12px;padding:15px}
+.stat strong{display:block;font-size:1.8rem;color:var(--cyan)}
+.stat span{color:#aab4e4;font-size:.85rem}
+.adminGame{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #30385f}
 .adminGame span{overflow-wrap:anywhere}
+.adminGame .adminActions{margin:0}
 .adminGame button{flex-shrink:0}
-@media(max-width:480px){.adminGame{align-items:flex-start;flex-direction:column}}
+#adminStatus{min-height:22px;color:var(--cyan);margin-top:10px}
+.note{font-size:.82rem;color:#929fcf;line-height:1.5}
+@media(max-width:520px){.adminGame{align-items:flex-start;flex-direction:column}#adminBox{padding:16px}.p1{width:110px;height:110px}}
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
-<div class="planet p1"></div><div class="planet p2"></div>
+<div class="planet p1"></div>
+<div class="planet p2"></div>
+
 <button id="adminOpen" type="button">⚙ Admin</button>
 
-<header><h1>🚀 ROBBIE’S GAMES</h1><p>Pick a game. Start playing.</p></header>
-<div class="search"><input id="q" type="text" placeholder="Search my games..." aria-label="Search games"></div>
-<div id="count"></div><div id="grid"></div>
+<header>
+<h1 id="siteTitle">🚀 ROBBIE’S GAMES</h1>
+<p>Pick a game. Start playing.</p>
+</header>
 
-<div id="adminOverlay" role="dialog" aria-modal="true" aria-label="Admin panel">
-  <div id="adminBox">
-    <h2>🔐 Robbie’s Games Admin</h2>
-    <p id="adminIntro">Enter the admin code to manage the games on this device.</p>
-    <div id="loginArea">
-      <div class="adminField"><label for="adminPassword">Admin code</label><input id="adminPassword" type="password" inputmode="numeric" placeholder="Enter code"></div>
-      <div class="adminActions"><button class="adminBtn" id="loginBtn">Unlock panel</button><button class="adminBtn secondary" id="closeAdmin">Close</button></div>
-    </div>
-    <div id="manageArea" hidden>
-      <h3 style="color:#b8c4ff;margin:15px 0 5px">Add a game</h3>
-      <div class="adminField"><label for="gameName">Game name</label><input id="gameName" placeholder="e.g. 8 Ball Pool"></div>
-      <div class="adminField"><label for="gameUrl">Game link</label><input id="gameUrl" placeholder="https://example.com/game"></div>
-      <div class="adminField"><label for="gameImage">Image URL or image filename (optional)</label><input id="gameImage" placeholder="https://... or game.png"></div>
-      <div class="adminField"><label for="gameEmoji">Emoji fallback</label><input id="gameEmoji" maxlength="8" value="🎮"></div>
-      <div class="adminActions"><button class="adminBtn" id="addGame">＋ Add game</button><button class="adminBtn secondary" id="lockAdmin">Lock panel</button><button class="adminBtn secondary" id="closeAdmin2">Close</button></div>
-      <div id="adminStatus" aria-live="polite"></div>
-      <div id="adminList"><h3 style="color:#b8c4ff;margin-bottom:8px">Current games</h3><div id="adminGames"></div></div>
-    </div>
+<div id="announcement"></div>
+<div class="search">
+<input id="q" type="search" placeholder="Search my games..." aria-label="Search games">
+</div>
+<div id="categoryBar"></div>
+<div id="count"></div>
+<div id="grid"></div>
+
+<div id="adminOverlay" role="dialog" aria-modal="true" aria-label="Admin dashboard">
+ <div id="adminBox">
+  <h2>🔐 Robbie’s Games Admin Dashboard</h2>
+  <p id="adminIntro">Enter the admin code to manage your gaming website.</p>
+
+  <div id="loginArea">
+   <div class="adminField">
+    <label for="adminPassword">Admin code</label>
+    <input id="adminPassword" type="password" inputmode="numeric" placeholder="Enter code">
+   </div>
+   <div class="adminActions">
+    <button class="adminBtn" id="loginBtn">Unlock dashboard</button>
+    <button class="adminBtn secondary" id="closeAdmin">Close</button>
+   </div>
   </div>
+
+  <div id="manageArea" hidden>
+   <div class="tabs">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="games">Games</button>
+    <button class="tab" data-tab="featured">Featured</button>
+    <button class="tab" data-tab="customise">Customise</button>
+   </div>
+
+   <section class="panel active" id="panel-overview">
+    <h3>Website overview</h3>
+    <div class="stats">
+     <div class="stat"><strong id="statGames">0</strong><span>Total games</span></div>
+     <div class="stat"><strong id="statCategories">0</strong><span>Categories</span></div>
+     <div class="stat"><strong id="statFeatured">0</strong><span>Featured games</span></div>
+     <div class="stat"><strong id="statLaunches">0</strong><span>Game launches on this browser</span></div>
+    </div>
+    <p class="note">Launch counts are stored locally in this browser. They are not visitor-wide analytics.</p>
+    <div class="adminActions">
+     <button class="adminBtn secondary" id="resetLaunches">Reset launch count</button>
+     <button class="adminBtn danger" id="resetAll">Restore original games and settings</button>
+    </div>
+   </section>
+
+   <section class="panel" id="panel-games">
+    <h3>Add a game</h3>
+    <div class="adminField"><label for="gameName">Game name</label><input id="gameName" placeholder="e.g. New Game"></div>
+    <div class="adminField"><label for="gameUrl">Game link</label><input id="gameUrl" placeholder="https://example.com/game"></div>
+    <div class="adminField"><label for="gameImage">Image URL or filename (optional)</label><input id="gameImage" placeholder="https://... or game.png"></div>
+    <div class="adminField"><label for="gameEmoji">Emoji fallback</label><input id="gameEmoji" maxlength="8" value="🎮"></div>
+    <div class="adminField">
+     <label for="gameCategory">Category</label>
+     <select id="gameCategory">
+      <option>Arcade</option><option>Racing</option><option>Sports</option><option>Puzzle</option><option>Adventure</option><option>Horror</option><option>Simulation</option><option>Other</option>
+     </select>
+    </div>
+    <div class="adminActions"><button class="adminBtn" id="addGame">＋ Add game</button></div>
+    <h3 style="margin-top:22px">Manage games</h3>
+    <div id="adminGames"></div>
+   </section>
+
+   <section class="panel" id="panel-featured">
+    <h3>Choose featured games</h3>
+    <p class="note">Featured games get a badge on their cards. Select or deselect them below.</p>
+    <div id="featuredList"></div>
+   </section>
+
+   <section class="panel" id="panel-customise">
+    <h3>Website customisation</h3>
+    <div class="adminField"><label for="customTitle">Website heading</label><input id="customTitle" maxlength="45" placeholder="ROBBIE’S GAMES"></div>
+    <div class="adminField"><label for="customAnnouncement">Homepage announcement (leave blank to hide)</label><textarea id="customAnnouncement" maxlength="180" placeholder="Welcome to Robbie's Games!"></textarea></div>
+    <div class="adminActions">
+     <button class="adminBtn" id="saveCustom">Save website settings</button>
+     <button class="adminBtn secondary" id="clearAnnouncement">Clear announcement</button>
+    </div>
+   </section>
+
+   <div id="adminStatus" aria-live="polite"></div>
+   <div class="adminActions">
+    <button class="adminBtn secondary" id="lockAdmin">Lock dashboard</button>
+    <button class="adminBtn secondary" id="closeAdmin2">Close</button>
+   </div>
+  </div>
+ </div>
 </div>
 
 <script>
-const defaultGames = [
- {n:"Paper.io",e:"📄",u:"https://advanced95.github.io/page/g/paperio2/",img:"IMG_9373.png"},
- {n:"Minecraft",e:"⛏️",u:"https://advanced95.github.io/page/g/mc/",img:"https://www.google.com/s2/favicons?domain=minecraft.net&sz=128"},
- {n:"Adventure Capitalist",e:"💰",u:"https://advanced95.github.io/page/g/adventurecapitalist/",img:"IMG_9372.jpeg"},
- {n:"Subway Surfers",e:"🏃",u:"https://advanced95.github.io/page/g/subway-surfers/",img:"IMG_9374.png"},
- {n:"Cookie Clicker",e:"🍪",u:"https://advanced95.github.io/page/g/cookieclicker/",img:"IMG_9375.png"},
- {n:"Geometry Dash",e:"🟩",u:"https://advanced95.github.io/page/g/geodash/",img:"https://www.google.com/s2/favicons?domain=robtopgames.com&sz=128"},
- {n:"Hole.io",e:"🕳️",u:"https://advanced95.github.io/page/g/holeio/",img:"IMG_9376.jpeg"},
- {n:"FNAF 1",e:"🐻",u:"https://advanced95.github.io/page/g/fnaf/",img:"https://www.google.com/s2/favicons?domain=scottgames.com&sz=128"},
- {n:"FNAF 2",e:"🐰",u:"https://advanced95.github.io/page/g/fnaf-2/",img:"https://www.google.com/s2/favicons?domain=scottgames.com&sz=128"},
- {n:"Block Blast",e:"🧩",u:"https://advanced95.github.io/page/g/blockblast/",img:"https://www.google.com/s2/favicons?domain=blockblast.com&sz=128"}
-];
-const STORAGE_KEY="robbies_games_admin_games_v1";
-let games;
-try {
- const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
- games=Array.isArray(saved)?saved:defaultGames.slice();
-} catch { games=defaultGames.slice(); }
+const defaultGames=[
+ {n:"Paper.io",e:"📄",u:"https://advanced95.github.io/page/g/paperio2/",img:"IMG_9373.png",cat:"Arcade"},
+ {n:"Minecraft",e:"⛏️",u:"https://advanced95.github.io/page/g/mc/",img:"https://www.google.com/s2/favicons?domain=minecraft.net&sz=128",cat:"Adventure"},
+ {n:"Adventure Capitalist",e:"💰",u:"https://advanced95.github.io/page/g/adventurecapitalist/",img:"IMG_9372.jpeg",cat:"Simulation"},
+ {n:"Subway Surfers",e:"🏃",u:"https://advanced95.github.io/page/g/subway-surfers/",img:"IMG_9374.png",cat:"Arcade"},
+ {n:"Cookie Clicker",e:"🍪",u:"https://advanced95.github.io/page/g/cookieclicker/",img:"IMG_9375.png",cat:"Simulation"},
+ {n:"Geometry Dash",e:"🟩",u:"https://advanced95.github.io/page/g/geodash/",img:"https://www.google.com/s2/favicons?domain=robtopgames.com&sz=128",cat:"Arcade"},
+ {n:"Hole.io",e:"🕳️",u:"https://advanced95.github.io/page/g/holeio/",img:"IMG_9376.jpeg",cat:"Arcade"},
+ {n:"FNAF 1",e:"🐻",u:"https://advanced95.github.io/page/g/fnaf/",img:"https://www.google.com/s2/favicons?domain=scottgames.com&sz=128",cat:"Horror"},
+ {n:"FNAF 2",e:"🐰",u:"https://advanced95.github.io/page/g/fnaf-2/",img:"https://www.google.com/s2/favicons?domain=scottgames.com&sz=128",cat:"Horror"},
+ {n:"Block Blast",e:"🧩",u:"https://advanced95.github.io/page/g/blockblast/",img:"https://www.google.com/s2/favicons?domain=blockblast.com&sz=128",cat:"Puzzle"},
+ {n:"Moto X3M",e:"🏍️",u:"https://www.coolmathgames.com/0-moto-x3m",img:"",cat:"Racing",featured:true},
+ {n:"Drift Hunters",e:"🚗",u:"https://www.crazygames.com/game/drift-hunters",img:"",cat:"Racing",featured:true},
 
-const grid=document.getElementById("grid"), count=document.getElementById("count"), q=document.getElementById("q");
-function saveGames(){localStorage.setItem(STORAGE_KEY,JSON.stringify(games));}
+ // CROSSY ROAD ADDED TO ROBBIE'S GAMES
+ {n:"Crossy Road",e:"🐔",u:"crossy-road.html",img:"",cat:"Arcade",featured:true}
+];
+
+const GAMES_KEY="robbies_games_admin_games_v2";
+const SETTINGS_KEY="robbies_games_admin_settings_v1";
+const LAUNCH_KEY="robbies_games_launch_count_v1";
+
+const cloneDefaults=()=>defaultGames.map(g=>({...g}));
+let games;
+try{
+ const saved=JSON.parse(localStorage.getItem(GAMES_KEY));
+ games=Array.isArray(saved)?saved:cloneDefaults();
+ // Add Crossy Road to existing saved games if it isn't already there
+ if(!games.some(g=>g.n==="Crossy Road")){
+  games.push({...defaultGames.find(g=>g.n==="Crossy Road")});
+  localStorage.setItem(GAMES_KEY,JSON.stringify(games));
+ }
+}catch{games=cloneDefaults();}
+
+let settings={title:"🚀 ROBBIE’S GAMES",announcement:""};
+try{settings={...settings,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")};}catch{}
+
+let launches=Number(localStorage.getItem(LAUNCH_KEY)||0);
+let activeCategory="All";
+const grid=document.getElementById("grid");
+const count=document.getElementById("count");
+const q=document.getElementById("q");
+
+function saveGames(){localStorage.setItem(GAMES_KEY,JSON.stringify(games));}
+function saveSettings(){localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));}
+function safeLink(url){
+ if(url==="crossy-road.html")return true;
+ try{const u=new URL(url);return u.protocol==="https:"||u.protocol==="http:";}catch{return false;}
+}
+
+function applySettings(){
+ document.getElementById("siteTitle").textContent=settings.title||"🚀 ROBBIE’S GAMES";
+ const a=document.getElementById("announcement");
+ a.textContent=settings.announcement||"";
+ a.style.display=settings.announcement?"block":"none";
+}
+
+function renderCategories(){
+ const bar=document.getElementById("categoryBar");
+ bar.innerHTML="";
+ const cats=["All",...new Set(games.map(g=>g.cat||"Other"))];
+ if(!cats.includes(activeCategory))activeCategory="All";
+ cats.forEach(c=>{
+  const b=document.createElement("button");
+  b.className="chip"+(activeCategory===c?" active":"");
+  b.textContent=c;
+  b.onclick=()=>{
+   activeCategory=c;
+   renderCategories();
+   render();
+  };
+  bar.appendChild(b);
+ });
+}
+
 function render(){
  const term=q.value.toLowerCase();
- const list=games.filter(g=>g.n.toLowerCase().includes(term));
  grid.innerHTML="";
+ const list=games.filter(g=>(g.n||"").toLowerCase().includes(term)&&(activeCategory==="All"||(g.cat||"Other")===activeCategory));
+
  list.forEach(g=>{
-  const a=document.createElement("a");a.className="card";a.href=g.u;a.target="_blank";a.rel="noopener noreferrer";
-  const img=document.createElement("img");img.src=g.img||"";img.alt=g.n;img.loading="lazy";
-  const fallback=document.createElement("span");fallback.textContent=g.e||"🎮";fallback.style.display="none";
-  img.onerror=()=>{img.style.display="none";fallback.style.display="block";};
-  if(!g.img){img.style.display="none";fallback.style.display="block";}
-  a.append(img,fallback,document.createTextNode(g.n));
-  const small=document.createElement("small");small.textContent="Play now";a.appendChild(small);grid.appendChild(a);
+  const a=document.createElement("a");
+  a.className="card";
+  a.href=g.u;
+  a.target="_blank";
+  a.rel="noopener noreferrer";
+  a.addEventListener("click",()=>{
+   launches++;
+   localStorage.setItem(LAUNCH_KEY,String(launches));
+  });
+
+  if(g.featured){
+   const f=document.createElement("b");
+   f.className="featured";
+   f.textContent="⭐ FEATURED";
+   a.appendChild(f);
+  }
+
+  const tag=document.createElement("b");
+  tag.className="tag";
+  tag.textContent=g.cat||"Other";
+  a.appendChild(tag);
+
+  if(g.img){
+   const img=document.createElement("img");
+   img.src=g.img;
+   img.alt=g.n;
+   img.loading="lazy";
+   img.onerror=()=>{img.replaceWith(makeEmoji(g.e));};
+   a.appendChild(img);
+  }else{
+   a.appendChild(makeEmoji(g.e));
+  }
+
+  const name=document.createElement("div");
+  name.textContent=g.n;
+  a.appendChild(name);
+
+  const small=document.createElement("small");
+  small.textContent="Play now";
+  a.appendChild(small);
+  grid.appendChild(a);
  });
  count.textContent=list.length+" games available";
 }
-q.addEventListener("input",render);render();
 
-/* ADMIN PANEL */
+function makeEmoji(e){
+ const s=document.createElement("span");
+ s.className="emoji";
+ s.textContent=e||"🎮";
+ return s;
+}
+
+function refresh(){
+ renderCategories();
+ render();
+ updateStats();
+}
+
+function updateStats(){
+ document.getElementById("statGames").textContent=games.length;
+ document.getElementById("statCategories").textContent=new Set(games.map(g=>g.cat||"Other")).size;
+ document.getElementById("statFeatured").textContent=games.filter(g=>g.featured).length;
+ document.getElementById("statLaunches").textContent=launches;
+}
+
+q.addEventListener("input",render);
+applySettings();
+refresh();
+
+/* ADMIN DASHBOARD */
 const ADMIN_CODE="1945";
-const overlay=document.getElementById("adminOverlay"), loginArea=document.getElementById("loginArea"), manageArea=document.getElementById("manageArea");
+const overlay=document.getElementById("adminOverlay");
+const loginArea=document.getElementById("loginArea");
+const manageArea=document.getElementById("manageArea");
 const status=document.getElementById("adminStatus");
-function openAdmin(){overlay.style.display="block";document.getElementById("adminPassword").focus();}
+
+function openAdmin(){
+ overlay.style.display="block";
+ document.getElementById("adminPassword").focus();
+}
 function closeAdmin(){overlay.style.display="none";}
-function lockAdmin(){manageArea.hidden=true;loginArea.hidden=false;document.getElementById("adminPassword").value="";document.getElementById("adminIntro").textContent="Enter the admin code to manage the games on this device.";}
+function lockAdmin(){
+ manageArea.hidden=true;
+ loginArea.hidden=false;
+ document.getElementById("adminPassword").value="";
+ document.getElementById("adminIntro").textContent="Enter the admin code to manage your gaming website.";
+}
+function setTab(name){
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+ document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+name));
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+
 function drawAdminList(){
- const list=document.getElementById("adminGames");list.innerHTML="";
+ const list=document.getElementById("adminGames");
+ list.innerHTML="";
  games.forEach((g,i)=>{
-  const row=document.createElement("div");row.className="adminGame";
-  const name=document.createElement("span");name.textContent=g.e+" "+g.n;
-  const actions=document.createElement("div");actions.className="adminActions";
-  const edit=document.createElement("button");edit.className="adminBtn secondary";edit.textContent="Edit";
+  const row=document.createElement("div");
+  row.className="adminGame";
+  const name=document.createElement("span");
+  name.textContent=(g.e||"🎮")+" "+g.n+" · "+(g.cat||"Other");
+  const actions=document.createElement("div");
+  actions.className="adminActions";
+
+  const edit=document.createElement("button");
+  edit.className="adminBtn secondary";
+  edit.textContent="Edit";
   edit.onclick=()=>{
    const n=prompt("Game name:",g.n);if(n===null)return;
    const u=prompt("Game link:",g.u);if(u===null)return;
-   const img=prompt("Image URL or filename (leave blank for emoji):",g.img||"");if(img===null)return;
+   const img=prompt("Image URL or filename (blank for emoji):",g.img||"");if(img===null)return;
    const e=prompt("Emoji:",g.e||"🎮");if(e===null)return;
-   if(!n.trim()||!/^https?:\/\//i.test(u.trim())){status.textContent="Please enter a name and a valid http/https game link.";return;}
-   games[i]={n:n.trim(),u:u.trim(),img:img.trim(),e:e.trim()||"🎮"};saveGames();render();drawAdminList();status.textContent="Game updated!";
+   const cat=prompt("Category:",g.cat||"Other");if(cat===null)return;
+   if(!n.trim()||!safeLink(u.trim())){
+    status.textContent="Enter a game name and a valid http/https link.";
+    return;
+   }
+   games[i]={...g,n:n.trim(),u:u.trim(),img:img.trim(),e:e.trim()||"🎮",cat:cat.trim()||"Other"};
+   saveGames();refresh();drawAdminList();drawFeatured();
+   status.textContent="Game updated!";
   };
-  const remove=document.createElement("button");remove.className="adminBtn danger";remove.textContent="Remove";
-  remove.onclick=()=>{if(confirm("Remove "+g.n+" from your games?")){games.splice(i,1);saveGames();render();drawAdminList();status.textContent="Game removed.";}}
-  actions.append(edit,remove);row.append(name,actions);list.appendChild(row);
+
+  const remove=document.createElement("button");
+  remove.className="adminBtn danger";
+  remove.textContent="Remove";
+  remove.onclick=()=>{
+   if(confirm("Remove "+g.n+" from your games?")){
+    games.splice(i,1);
+    saveGames();refresh();drawAdminList();drawFeatured();
+    status.textContent="Game removed.";
+   }
+  };
+
+  actions.append(edit,remove);
+  row.append(name,actions);
+  list.appendChild(row);
  });
 }
+
+function drawFeatured(){
+ const list=document.getElementById("featuredList");
+ list.innerHTML="";
+ games.forEach((g,i)=>{
+  const label=document.createElement("label");
+  label.style.cssText="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #30385f";
+  const cb=document.createElement("input");
+  cb.type="checkbox";
+  cb.checked=!!g.featured;
+  cb.onchange=()=>{
+   games[i].featured=cb.checked;
+   saveGames();refresh();drawFeatured();
+  };
+  const span=document.createElement("span");
+  span.textContent=g.e+" "+g.n;
+  label.append(cb,span);
+  list.appendChild(label);
+ });
+}
+
+function prepareAdmin(){
+ drawAdminList();
+ drawFeatured();
+ updateStats();
+ document.getElementById("customTitle").value=settings.title;
+ document.getElementById("customAnnouncement").value=settings.announcement;
+}
+
 document.getElementById("adminOpen").onclick=openAdmin;
 document.getElementById("closeAdmin").onclick=closeAdmin;
 document.getElementById("closeAdmin2").onclick=closeAdmin;
+
 document.getElementById("loginBtn").onclick=()=>{
  if(document.getElementById("adminPassword").value===ADMIN_CODE){
-  loginArea.hidden=true;manageArea.hidden=false;document.getElementById("adminIntro").textContent="Admin unlocked. Changes are saved in this browser.";drawAdminList();status.textContent="";
- } else {document.getElementById("adminIntro").textContent="That code is not correct. Try again.";}
+  loginArea.hidden=true;
+  manageArea.hidden=false;
+  document.getElementById("adminIntro").textContent="Dashboard unlocked. Your changes are saved in this browser.";
+  prepareAdmin();
+  status.textContent="";
+ }else{
+  document.getElementById("adminIntro").textContent="That code is not correct. Try again.";
+ }
 };
-document.getElementById("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("loginBtn").click();});
+
+document.getElementById("adminPassword").addEventListener("keydown",e=>{
+ if(e.key==="Enter")document.getElementById("loginBtn").click();
+});
+
 document.getElementById("lockAdmin").onclick=lockAdmin;
+
 document.getElementById("addGame").onclick=()=>{
- const n=document.getElementById("gameName").value.trim(),u=document.getElementById("gameUrl").value.trim();
- const img=document.getElementById("gameImage").value.trim(),e=document.getElementById("gameEmoji").value.trim()||"🎮";
- if(!n||!/^https?:\/\//i.test(u)){status.textContent="Add a game name and a valid link starting with http:// or https://.";return;}
- games.push({n,e,u,img});saveGames();render();drawAdminList();
- document.getElementById("gameName").value="";document.getElementById("gameUrl").value="";document.getElementById("gameImage").value="";document.getElementById("gameEmoji").value="🎮";
- status.textContent="Game added and saved!";
+ const n=document.getElementById("gameName").value.trim();
+ const u=document.getElementById("gameUrl").value.trim();
+ const img=document.getElementById("gameImage").value.trim();
+ const e=document.getElementById("gameEmoji").value.trim()||"🎮";
+ const cat=document.getElementById("gameCategory").value;
+
+ if(!n||!safeLink(u)){
+  status.textContent="Enter a game name and a valid link starting with http:// or https://.";
+  return;
+ }
+
+ games.push({n,u,img,e,cat,featured:false});
+ saveGames();refresh();drawAdminList();drawFeatured();
+
+ ["gameName","gameUrl","gameImage"].forEach(id=>document.getElementById(id).value="");
+ document.getElementById("gameEmoji").value="🎮";
+ status.textContent="Game added!";
 };
-overlay.addEventListener("click",e=>{if(e.target===overlay)closeAdmin();});
+
+document.getElementById("saveCustom").onclick=()=>{
+ settings.title=document.getElementById("customTitle").value.trim()||"🚀 ROBBIE’S GAMES";
+ settings.announcement=document.getElementById("customAnnouncement").value.trim();
+ saveSettings();applySettings();
+ status.textContent="Website settings saved!";
+};
+
+document.getElementById("clearAnnouncement").onclick=()=>{
+ document.getElementById("customAnnouncement").value="";
+ settings.announcement="";
+ saveSettings();applySettings();
+ status.textContent="Announcement cleared.";
+};
+
+document.getElementById("resetLaunches").onclick=()=>{
+ if(confirm("Reset the launch count on this browser?")){
+  launches=0;
+  localStorage.setItem(LAUNCH_KEY,"0");
+  updateStats();
+  status.textContent="Launch count reset.";
+ }
+};
+
+document.getElementById("resetAll").onclick=()=>{
+ if(confirm("Restore the original games and clear your website customisation?")){
+  games=cloneDefaults();
+  settings={title:"🚀 ROBBIE’S GAMES",announcement:""};
+  launches=0;
+  saveGames();saveSettings();
+  localStorage.setItem(LAUNCH_KEY,"0");
+  applySettings();refresh();prepareAdmin();
+  status.textContent="Original games and settings restored.";
+ }
+};
+
+overlay.addEventListener("click",e=>{
+ if(e.target===overlay)closeAdmin();
+});
 
 /* STARFIELD */
-const sc=document.getElementById("stars"),sx=sc.getContext("2d");let st=[];
-function size(){sc.width=innerWidth;sc.height=innerHeight;st=Array.from({length:220},()=>({x:Math.random()*sc.width,y:Math.random()*sc.height,r:Math.random()*1.6+.3,s:Math.random()*.4+.05,t:Math.random()*6}));}
-function draw(){sx.clearRect(0,0,sc.width,sc.height);st.forEach(s=>{s.t+=.03;s.y+=s.s;if(s.y>sc.height){s.y=0;s.x=Math.random()*sc.width;}sx.globalAlpha=.5+.5*Math.sin(s.t);sx.fillStyle="#fff";sx.beginPath();sx.arc(s.x,s.y,s.r,0,6.3);sx.fill();});requestAnimationFrame(draw);}
-addEventListener("resize",size);size();draw();
+const sc=document.getElementById("stars");
+const sx=sc.getContext("2d");
+let st=[];
+
+function size(){
+ sc.width=innerWidth;
+ sc.height=innerHeight;
+ st=Array.from({length:220},()=>({
+  x:Math.random()*sc.width,
+  y:Math.random()*sc.height,
+  r:Math.random()*1.6+.3,
+  s:Math.random()*.4+.05,
+  t:Math.random()*6
+ }));
+}
+
+function draw(){
+ sx.clearRect(0,0,sc.width,sc.height);
+ st.forEach(s=>{
+  s.t+=.03;
+  s.y+=s.s;
+  if(s.y>sc.height){
+   s.y=0;
+   s.x=Math.random()*sc.width;
+  }
+  sx.globalAlpha=.5+.5*Math.sin(s.t);
+  sx.fillStyle="#fff";
+  sx.beginPath();
+  sx.arc(s.x,s.y,s.r,0,6.3);
+  sx.fill();
+ });
+ requestAnimationFrame(draw);
+}
+
+addEventListener("resize",size);
+size();
+draw();
 </script>
 </body>
 </html>
